@@ -137,7 +137,7 @@ Widget _boton(BuildContext context) {
             try{
               var req = await _authAPI.login(cedula, password);
               print(req.statusCode);
-              if(req.statusCode == 200 && req.body !='NO SE PUEDE') {
+              if(req.statusCode == 200 && req.body.isNotEmpty) {
                 var user = UserMob.fromReqBody(req.body);
                 user.printAttributes();
                 _modelClass.setValores(user);

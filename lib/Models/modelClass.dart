@@ -18,7 +18,6 @@ class modelClass {
   String get _sexo => sexo;
   String get _fecha_ult_acceso => fecha_ult_acceso;
 
-
   setValores(UserMob uservals) {
     cedula = uservals.cedula;
     nombre = uservals.nombre;
