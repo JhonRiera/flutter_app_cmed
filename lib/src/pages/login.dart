@@ -1,7 +1,12 @@
 // ignore_for_file: prefer_final_fields
 
+import 'dart:convert';
+
 import 'package:cmed_app/Models/authApi.dart';
+import 'package:cmed_app/Models/medicineApi.dart';
+import 'package:cmed_app/Models/medicineUser.dart';
 import 'package:cmed_app/Models/modelClass.dart';
+import 'package:cmed_app/Models/modelClassMedica.dart';
 import 'package:cmed_app/src/pages/navbar.dart';
 import 'package:cmed_app/src/pages/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -24,11 +29,13 @@ class loginPage extends StatefulWidget {
 // ignore: camel_case_types
 class _loginPageState extends State<loginPage> {
   AuthApi _authAPI = AuthApi();
+
   final _key =  GlobalKey<FormState>();
   String cedula = '';
   String password = '';
 
   modelClass _modelClass = GetIt.instance.get<modelClass>();
+  
 
   @override
   Widget build(BuildContext context) {
@@ -133,14 +140,17 @@ Widget _boton(BuildContext context) {
             textStyle: const TextStyle(fontSize: 19),
           ),
           onPressed: () async {
-            //print(cedula +' '+ password);
             try{
+              //REQ de login
               var req = await _authAPI.login(cedula, password);
-              print(req.statusCode);
+              
               if(req.statusCode == 200 && req.body.isNotEmpty) {
+                //Obtenemos el objeto usuario con uss atributos
                 var user = UserMob.fromReqBody(req.body);
                 user.printAttributes();
+                //PATRON SINGLETON
                 _modelClass.setValores(user);
+               
                 // ignore: use_build_context_synchronously
                 Navigator.push(context, PageTransition(
                 type: PageTransitionType.fade,
@@ -148,12 +158,9 @@ Widget _boton(BuildContext context) {
                 isIos: false,
                 duration: const Duration(milliseconds: 400)
                 ));
-                //print('AUTENTICADOOOOO by JR');
+            
               }
               else{
-                //print(req.statusCode );
-                //print('UD NO PUEDE AUTENTICAR');
-                
                 Fluttertoast.showToast(
                   msg: "Credenciales incorrectas, por favor vuelva a intentarlo",  // message
                   toastLength: Toast.LENGTH_SHORT, // length

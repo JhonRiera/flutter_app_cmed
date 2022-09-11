@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../Models/modelClass.dart';
+
+modelClass _modelClass = GetIt.instance.get<modelClass>();
 
 class dietasPage extends StatelessWidget {
   const dietasPage({Key? key}) : super(key: key);
@@ -88,7 +93,7 @@ class dietasPage extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           Text(
-            "Jhony Riera",
+            _modelClass.nombre,
             style: GoogleFonts.montserrat(
               fontSize: 13.5,
             ),

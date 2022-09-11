@@ -1,3 +1,11 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
+import 'dart:convert';
+
+import 'package:cmed_app/Models/medicineApi.dart';
+import 'package:cmed_app/Models/medicineUser.dart';
+import 'package:cmed_app/Models/consultaMedicamento.dart';
+import 'package:cmed_app/Models/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -5,18 +13,17 @@ import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import '../../Models/modelClass.dart';
+import '../../Models/modelClassMedica.dart';
+
+modelClass _modelClass = GetIt.instance.get<modelClass>();
+modelClassMedica _modelMedicamto = GetIt.instance.get<modelClassMedica>();
+medicineApi _medicamen = medicineApi();
 
 class homePage extends StatelessWidget {
-  //const homePage({Key? key}) : super(key: key);
-
-   modelClass _modelClass = GetIt.instance.get<modelClass>();
-
+  
   @override
   Widget build(BuildContext context) {
-    //fecha
-   
-
-   
+    _getMedicine();
     return Scaffold(
       body: ListView(
         children: <Widget>[
@@ -59,14 +66,14 @@ class homePage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                         Text(
-                          "Bienvenido "+ _modelClass.nombre,
+                          "Bienvenido ${_modelClass.nombre}",
                           style: GoogleFonts.montserrat(
                               fontSize: 18,
                             color: Colors.white,
                           ),
                         ),
                         Text(
-                          "Último Ingreso: "+ formattedDate,
+                          "Último Ingreso: $formattedDate",
                           style: GoogleFonts.montserrat(
                               fontSize: 15,
                             color: Colors.white,
@@ -84,6 +91,7 @@ class homePage extends StatelessWidget {
   }
   
  Widget _tituloEstado() {
+  
   return Container(
     margin: const EdgeInsets.all(20),
     decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5),
@@ -148,7 +156,7 @@ class homePage extends StatelessWidget {
                 SizedBox(
                   width: 160.0,
                   child: Text(
-                      "Omeprazol 500gr",
+                      _modelMedicamto.medicamentos.first.nombreMedicamento,
                       style: GoogleFonts.roboto(
                       fontSize: 17,
                       fontStyle: FontStyle.italic,
@@ -192,7 +200,7 @@ class homePage extends StatelessWidget {
                 SizedBox(
                   width: 160.0,
                   child: Text(
-                    "Dosis: 2 Capsulas",
+                    "Dosis: ${_modelMedicamto.medicamentos.first.dosis}",
                     style: GoogleFonts.roboto(
                     fontSize: 13.5,
                   ),
@@ -266,4 +274,21 @@ class homePage extends StatelessWidget {
       ),
     );
   }
+}
+
+_getMedicine() async {
+   var req = await _medicamen.medicamento(_modelClass.cod_persona);
+   var medicamentos = ConsultaMedicamento.fromReqBody(req.body);
+   //medicamentos.printAttributes();
+
+  _modelMedicamto.setValores(medicamentos);
+
+  //print(_modelMedicamto.medicamentos);
+   
+   
+   
+   /*String arrayObjsText = reqm.body;
+   var medicamentos = jsonDecode(arrayObjsText)['receta_medica']['receta_medicamentos'] as List;
+   List<Medicamento> listMedicam = medicamentos.map((medicamentoTag) => Medicamento.fromJson(medicamentoTag)).toList();
+   print(listMedicam.length);*/
 }

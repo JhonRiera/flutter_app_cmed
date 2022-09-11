@@ -46,7 +46,7 @@ class UserMob {
   factory UserMob.fromReqBody(String body) {
     Map<String, dynamic> json = jsonDecode(body);
 
-  print(json);
+  //print(json);
     return UserMob(
       cod_persona: json['cod_persona'], 
       cedula: json["cedula"],

@@ -11,12 +11,12 @@ class modelClass {
   String sexo = " ";
   String fecha_ult_acceso = " ";
 
-  String get _cedula => cedula;
+ /* String get _cedula => cedula;
   String get _nombre => nombre;
   String get _email => email;
   String get _cod_persona => cod_persona;
   String get _sexo => sexo;
-  String get _fecha_ult_acceso => fecha_ult_acceso;
+  String get _fecha_ult_acceso => fecha_ult_acceso;*/
 
   setValores(UserMob uservals) {
     cedula = uservals.cedula;
