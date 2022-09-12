@@ -15,6 +15,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../Models/consultaMedicamento.dart';
 import '../../Models/mobileUser.dart';
 import '../../Models/modelClass.dart';
 
@@ -34,8 +35,11 @@ class _loginPageState extends State<loginPage> {
   String cedula = '';
   String password = '';
 
+  //MODEL CLASS PERSONA (TIPO INJECTION) - GET IT
   modelClass _modelClass = GetIt.instance.get<modelClass>();
-  
+  //MODEL CLASS MEDICMANETO (TIPO INJECTION) - GET IT
+  modelClassMedica _modelMedicamto = GetIt.instance.get<modelClassMedica>();
+  medicineApi _medicamen = medicineApi();
 
   @override
   Widget build(BuildContext context) {
@@ -150,6 +154,8 @@ Widget _boton(BuildContext context) {
                 user.printAttributes();
                 //PATRON SINGLETON
                 _modelClass.setValores(user);
+                //PATRON SINGLETON MEDICAMENTOS
+                _getMedicine(user.cod_persona);
                
                 // ignore: use_build_context_synchronously
                 Navigator.push(context, PageTransition(
@@ -179,6 +185,24 @@ Widget _boton(BuildContext context) {
   );
 }
 
+_getMedicine(String codPersona) async {
+   var req = await _medicamen.medicamento(codPersona);
+   var medicamentos = ConsultaMedicamento.fromReqBody(req.body);
+   //medicamentos.printAttributes();
+
+  _modelMedicamto.setValores(medicamentos);
+
+  //print(_modelMedicamto.medicamentos);
+   
+   
+   
+   /*String arrayObjsText = reqm.body;
+   var medicamentos = jsonDecode(arrayObjsText)['receta_medica']['receta_medicamentos'] as List;
+   List<Medicamento> listMedicam = medicamentos.map((medicamentoTag) => Medicamento.fromJson(medicamentoTag)).toList();
+   print(listMedicam.length);*/
+}
 
 }
+
+
 

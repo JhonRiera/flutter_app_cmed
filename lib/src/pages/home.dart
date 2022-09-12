@@ -17,13 +17,12 @@ import '../../Models/modelClassMedica.dart';
 
 modelClass _modelClass = GetIt.instance.get<modelClass>();
 modelClassMedica _modelMedicamto = GetIt.instance.get<modelClassMedica>();
-medicineApi _medicamen = medicineApi();
+
 
 class homePage extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    _getMedicine();
     return Scaffold(
       body: ListView(
         children: <Widget>[
@@ -274,21 +273,4 @@ class homePage extends StatelessWidget {
       ),
     );
   }
-}
-
-_getMedicine() async {
-   var req = await _medicamen.medicamento(_modelClass.cod_persona);
-   var medicamentos = ConsultaMedicamento.fromReqBody(req.body);
-   //medicamentos.printAttributes();
-
-  _modelMedicamto.setValores(medicamentos);
-
-  //print(_modelMedicamto.medicamentos);
-   
-   
-   
-   /*String arrayObjsText = reqm.body;
-   var medicamentos = jsonDecode(arrayObjsText)['receta_medica']['receta_medicamentos'] as List;
-   List<Medicamento> listMedicam = medicamentos.map((medicamentoTag) => Medicamento.fromJson(medicamentoTag)).toList();
-   print(listMedicam.length);*/
 }

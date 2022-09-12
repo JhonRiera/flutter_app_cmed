@@ -3,7 +3,7 @@ import 'package:cmed_app/src/pages/default_page.dart';
 import 'package:cmed_app/src/routes/routes.dart';
 import 'package:flutter/material.dart';
 
-void main() async => { WidgetsFlutterBinding.ensureInitialized(), await setUp(), runApp(Cmed())};
+void main() async => { await setUp(), runApp(Cmed())};
 
 class Cmed extends StatelessWidget {
   @override
