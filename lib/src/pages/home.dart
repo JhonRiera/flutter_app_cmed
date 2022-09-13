@@ -2,7 +2,7 @@
 
 import 'dart:convert';
 
-import 'package:cmed_app/Models/medicineApi.dart';
+import 'package:cmed_app/Models/API/medicineApi.dart';
 import 'package:cmed_app/Models/medicineUser.dart';
 import 'package:cmed_app/Models/consultaMedicamento.dart';
 import 'package:cmed_app/Models/service_locator.dart';

@@ -6,6 +6,8 @@ class BaseApi{
   
   var mobileUsers = base + "/personas/usuarios/mobile";
   var medicamentos = base + "/persona/paciente/medicamentos";
+  var dietas = base + "/persona/paciente/dietas";
+  var recetaM = base + "/persona/paciente/recetaM";
 
   Map<String,String> headers = {                           
        "Content-Type": "application/json; charset=UTF-8" 

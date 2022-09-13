@@ -4,34 +4,6 @@ import 'dart:convert';
 
 class UserMob {
 
-  /* [
-  {
-    "cod_persona": "1",
-    "cedula": "1719624999",
-    "nombres": "Jhony",
-    "apellidos": "Riera",
-    "ocupacion": "ND",
-    "estado_civil": "S",
-    "pais_origen": "EC",
-    "sexo": "M",
-    "celular": "0996876674",
-    "direccion": "Quito",
-    "fecha_nacimiento": "2020-01-01",
-    "lugar_nacimiento": "Quito",
-    "createdAt": "2020-01-01T05:00:00.000Z",
-    "updatedAt": "2020-01-01T05:00:00.000Z",
-    "cod_rol": null,
-    "usuario": {
-      "cod_usuario": "1",
-      "email": "jhonyriera@hotmail.com",
-      "password": "jhony123",
-      "fecha_ultimo_acceso": "2020-10-10T05:00:00.000Z",
-      "createdAt": "2020-01-01T05:00:00.000Z",
-      "updatedAt": "2020-01-01T05:00:00.000Z"
-    }
-  }
-]*/
-
   final String cedula;
   final String nombre ;
   final String email;

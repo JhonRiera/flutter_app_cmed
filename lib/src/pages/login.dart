@@ -2,11 +2,17 @@
 
 import 'dart:convert';
 
+import 'package:cmed_app/Models/API/dietaApi.dart';
+import 'package:cmed_app/Models/API/recetaMApi.dart';
 import 'package:cmed_app/Models/authApi.dart';
-import 'package:cmed_app/Models/medicineApi.dart';
+import 'package:cmed_app/Models/API/medicineApi.dart';
+import 'package:cmed_app/Models/consultaDieta.dart';
+import 'package:cmed_app/Models/consultaReceta.dart';
 import 'package:cmed_app/Models/medicineUser.dart';
 import 'package:cmed_app/Models/modelClass.dart';
+import 'package:cmed_app/Models/modelClassDietas.dart';
 import 'package:cmed_app/Models/modelClassMedica.dart';
+import 'package:cmed_app/Models/modelClassRecetaM.dart';
 import 'package:cmed_app/src/pages/navbar.dart';
 import 'package:cmed_app/src/pages/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +35,14 @@ class loginPage extends StatefulWidget {
 
 // ignore: camel_case_types
 class _loginPageState extends State<loginPage> {
+  // API DE AUTENTICACION USUARIOS
   AuthApi _authAPI = AuthApi();
+  //API DE MEDICAMENTOS USUARIO
+  medicineApi _medicamen = medicineApi();
+  //API DE DIETAS USUARIO
+  dietaApi _dietas = dietaApi();
+  //API DE RECETA USUARIO
+  recetaMApi _receta = recetaMApi();
 
   final _key =  GlobalKey<FormState>();
   String cedula = '';
@@ -39,7 +52,10 @@ class _loginPageState extends State<loginPage> {
   modelClass _modelClass = GetIt.instance.get<modelClass>();
   //MODEL CLASS MEDICMANETO (TIPO INJECTION) - GET IT
   modelClassMedica _modelMedicamto = GetIt.instance.get<modelClassMedica>();
-  medicineApi _medicamen = medicineApi();
+  //MODEL CLASS DIETAS (TIPO INJECTION) - GET IT
+  modelClassDieta _modelDieta = GetIt.instance.get<modelClassDieta>();
+  //MODEL CLASS DIETAS (TIPO INJECTION) - GET IT
+  modelClassReceta _modelReceta = GetIt.instance.get<modelClassReceta>();
 
   @override
   Widget build(BuildContext context) {
@@ -152,10 +168,14 @@ Widget _boton(BuildContext context) {
                 //Obtenemos el objeto usuario con uss atributos
                 var user = UserMob.fromReqBody(req.body);
                 user.printAttributes();
-                //PATRON SINGLETON
+                //PATRON SINGLETON USUARIO
                 _modelClass.setValores(user);
                 //PATRON SINGLETON MEDICAMENTOS
                 _getMedicine(user.cod_persona);
+                //PATRON SINGLETON DIETA
+                _getDietas(user.cod_persona);
+                //PATRON SINGLETON RECETA MEDICA
+                _getReceta(user.cod_persona);
                
                 // ignore: use_build_context_synchronously
                 Navigator.push(context, PageTransition(
@@ -200,6 +220,22 @@ _getMedicine(String codPersona) async {
    var medicamentos = jsonDecode(arrayObjsText)['receta_medica']['receta_medicamentos'] as List;
    List<Medicamento> listMedicam = medicamentos.map((medicamentoTag) => Medicamento.fromJson(medicamentoTag)).toList();
    print(listMedicam.length);*/
+}
+
+_getDietas(String codPersona) async {
+  var req = await _dietas.dieta(codPersona);
+  var dietasU = ConsultaDieta.fromReqBody(req.body);
+
+  //dietasU.printAttributes();
+  _modelDieta.setValores(dietasU);
+}
+
+_getReceta(String codPersona) async {
+  var req = await _receta.receta(codPersona);
+  var recetaME = ConsultaReceta.fromReqBody(req.body);
+
+  recetaME.printAttributes();
+  _modelReceta.setValores(recetaME);
 }
 
 }
