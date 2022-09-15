@@ -2,7 +2,10 @@
 
 import 'dart:convert';
 
+import 'dart:developer' as developer;
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:cmed_app/Models/API/dietaApi.dart';
+import 'package:cmed_app/Models/API/notification_api.dart';
 import 'package:cmed_app/Models/API/recetaMApi.dart';
 import 'package:cmed_app/Models/authApi.dart';
 import 'package:cmed_app/Models/API/medicineApi.dart';
@@ -35,6 +38,34 @@ class loginPage extends StatefulWidget {
 
 // ignore: camel_case_types
 class _loginPageState extends State<loginPage> {
+  late final LocalNotificationService service;
+
+  @override
+  void initState() {
+    //service = LocalNotificationService();
+    //service.intialize();
+    super.initState();
+
+    /*NotificationApi.init(initScheduled: true);
+    listenNotifications();
+    
+    
+    NotificationApi.showNotification(
+      title: 'HOLA',
+      body: 'MI PRIMERA NOTIFICACION',
+      payload: 'NOSE',
+      scheduledDate: DateTime.now().add(const Duration(seconds: 12)),
+    );*/
+    
+  }
+
+  /*void listenNotifications() => 
+      NotificationApi.onNotifications.stream.listen(onClickedNotification);
+
+  void onClickedNotification(String? payload) => 
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => loginPage(),
+    ));*/
   // API DE AUTENTICACION USUARIOS
   AuthApi _authAPI = AuthApi();
   //API DE MEDICAMENTOS USUARIO
@@ -47,6 +78,7 @@ class _loginPageState extends State<loginPage> {
   final _key =  GlobalKey<FormState>();
   String cedula = '';
   String password = '';
+  int alarmID = 3;
 
   //MODEL CLASS PERSONA (TIPO INJECTION) - GET IT
   modelClass _modelClass = GetIt.instance.get<modelClass>();
@@ -63,6 +95,19 @@ class _loginPageState extends State<loginPage> {
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 50),
         children: <Widget>[
+           ElevatedButton(
+                    onPressed: () async {
+                      print('TOUCHEDDDD');
+                      //print( AndroidAlarmManager.oneShotAt(DateTime(2022,09,15,11,23), alarmID, fireAlarm));
+                      await AndroidAlarmManager.oneShotAt(DateTime(2022,09,15,17,18), alarmID, printHello);
+                      //print(DateTime.now());
+                      //await service.showScheduledNotification(id: 1, title: 'Hola SOY JHONY', body: 'APRENDI A USAR NOTIFICACIONES', seconds: 4, /*scheduleDate: DateTime.now()*/);
+                      //await service.cancelAll();
+                    },
+                    child: const Text('Show Scheduled Notification'),
+                  ),
+
+
           _imagen(),
           _titulo(),
           const Divider(
@@ -237,6 +282,19 @@ _getReceta(String codPersona) async {
   recetaME.printAttributes();
   _modelReceta.setValores(recetaME);
 }
+
+// The callback for our alarm
+  static void printHello() async {
+    print('INGRESNADO A CALLBACK');
+    final instance = new LocalNotificationService();
+    instance.intialize();
+
+    await instance.showScheduledNotification(id: 1, title: 'JR', body: 'THIS IS BODY', seconds: 4);
+
+    //await service.showScheduledNotification(id: 1, title: 'Hola SOY JHONY', body: 'APRENDI A USAR NOTIFICACIONES', seconds: 4);
+    
+  }
+
 
 }
 

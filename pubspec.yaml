@@ -42,6 +42,10 @@ dependencies:
   fluttertoast: ^8.0.9
   get_it: ^7.2.0
   intl: ^0.17.0
+  flutter_local_notifications: ^9.9.1
+  rxdart: ^0.27.5
+  flutter_native_timezone: ^2.0.0
+  android_alarm_manager_plus: ^2.0.6+1
 
 dev_dependencies:
   flutter_test:
