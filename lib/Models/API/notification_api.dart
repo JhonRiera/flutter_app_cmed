@@ -1,4 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages
+// ignore_for_file: depend_on_referenced_packages, prefer_const_constructors
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
@@ -16,17 +16,18 @@ class LocalNotificationService {
     const AndroidInitializationSettings androidInitializationSettings =
         AndroidInitializationSettings('ic_stat_local_hospital');
 
-    IOSInitializationSettings iosInitializationSettings =
+    /*IOSInitializationSettings iosInitializationSettings =
         IOSInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: true,
       onDidReceiveLocalNotification: onDidReceiveLocalNotification,
-    );
+    );*/
 
+    // ignore: prefer_const_constructors
     final InitializationSettings settings = InitializationSettings(
-      android: androidInitializationSettings,
-      iOS: iosInitializationSettings,
+      android: androidInitializationSettings
+      //iOS: iosInitializationSettings,
     );
 
     await _localNotificationService.initialize(
@@ -37,18 +38,21 @@ class LocalNotificationService {
 
   Future<NotificationDetails> _notificationDetails() async {
     const AndroidNotificationDetails androidNotificationDetails =
-        AndroidNotificationDetails('channel_id', 'channel_name',
+        AndroidNotificationDetails(
+            'channel_id', 
+            'channel_name',
             channelDescription: 'description',
             importance: Importance.max,
             priority: Priority.max,
-            playSound: true);
+            playSound: true
+        );
 
-    const IOSNotificationDetails iosNotificationDetails =
-        IOSNotificationDetails();
+    /*const IOSNotificationDetails iosNotificationDetails =
+        IOSNotificationDetails();*/
 
     return const NotificationDetails(
       android: androidNotificationDetails,
-      iOS: iosNotificationDetails,
+      //iOS: iosNotificationDetails,
     );
   }
 
@@ -66,41 +70,40 @@ class LocalNotificationService {
       required String title,
       required String body,
       required int seconds,
-      /*required DateTime scheduleDate*/}) async {
+      required DateTime scheduleDate}) async {
     final details = await _notificationDetails();
     await _localNotificationService.zonedSchedule(
       id,
       title,
       body,
       tz.TZDateTime.from(
-        DateTime.now().add(Duration(minutes: 1)),
+        DateTime.now().add(Duration(seconds: seconds)),
         tz.local,
       ),
        //_scheduleWeekly(Time(19, 56), days: [DateTime.wednesday]),
-       //_scheduleDaily(Time(21, 55)),
+       //_scheduleDaily(Time(13, 55)),
       details,
       androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
-          //matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+          matchDateTimeComponents: DateTimeComponents.dateAndTime,
     );
   }
 
 static tz.TZDateTime _scheduleDaily(Time time){   
-    final now = DateTime.now();
+    final now = tz.TZDateTime.now(tz.local);
     var scheduleDate = tz.TZDateTime(tz.local, now.year, now.month, now.day,
       time.hour, time.minute, time.second);
-      print('ESTO ES NOW $now');
-      print(' ESTO ES SCHEDULE $scheduleDate');
+
+          /*return scheduleDate.isBefore(now)
+          ? scheduleDate.add(Duration(days: 1))
+          : scheduleDate; */
 
       if(scheduleDate.isBefore(now)){
         print('SIPP');
         scheduleDate = scheduleDate.add(const Duration(days: 1));
-        print(scheduleDate);
       }
-      /*return scheduleDate.isBefore(now)
-          ? scheduleDate.add(Duration(days: 1))
-          : scheduleDate; */
+      print(scheduleDate);
       return scheduleDate;
   }
 

@@ -3,6 +3,8 @@
 import 'dart:convert';
 
 import 'dart:developer' as developer;
+import 'dart:isolate';
+import 'dart:ui';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:cmed_app/Models/API/dietaApi.dart';
 import 'package:cmed_app/Models/API/notification_api.dart';
@@ -23,10 +25,14 @@ import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:math';
 
 import '../../Models/consultaMedicamento.dart';
 import '../../Models/mobileUser.dart';
 import '../../Models/modelClass.dart';
+import '../../main.dart';
+
 
 // ignore: camel_case_types
 class loginPage extends StatefulWidget {
@@ -39,33 +45,29 @@ class loginPage extends StatefulWidget {
 // ignore: camel_case_types
 class _loginPageState extends State<loginPage> {
   late final LocalNotificationService service;
+  int _counter = 0;
+
 
   @override
   void initState() {
     //service = LocalNotificationService();
     //service.intialize();
     super.initState();
-
-    /*NotificationApi.init(initScheduled: true);
-    listenNotifications();
-    
-    
-    NotificationApi.showNotification(
-      title: 'HOLA',
-      body: 'MI PRIMERA NOTIFICACION',
-      payload: 'NOSE',
-      scheduledDate: DateTime.now().add(const Duration(seconds: 12)),
-    );*/
-    
+    // Register for events from the background isolate. These messages will
+    // always coincide with an alarm firing.
+    port.listen((_) async => await _incrementCounter());
   }
 
-  /*void listenNotifications() => 
-      NotificationApi.onNotifications.stream.listen(onClickedNotification);
+  Future<void> _incrementCounter() async {
+    developer.log('Increment counter!');
+    // Ensure we've loaded the updated count from the background isolate.
+    await prefs?.reload();
 
-  void onClickedNotification(String? payload) => 
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => loginPage(),
-    ));*/
+    setState(() {
+      _counter++;
+    });
+  }
+
   // API DE AUTENTICACION USUARIOS
   AuthApi _authAPI = AuthApi();
   //API DE MEDICAMENTOS USUARIO
@@ -78,7 +80,7 @@ class _loginPageState extends State<loginPage> {
   final _key =  GlobalKey<FormState>();
   String cedula = '';
   String password = '';
-  int alarmID = 3;
+  //int alarmID = 1;
 
   //MODEL CLASS PERSONA (TIPO INJECTION) - GET IT
   modelClass _modelClass = GetIt.instance.get<modelClass>();
@@ -98,8 +100,13 @@ class _loginPageState extends State<loginPage> {
            ElevatedButton(
                     onPressed: () async {
                       print('TOUCHEDDDD');
-                      //print( AndroidAlarmManager.oneShotAt(DateTime(2022,09,15,11,23), alarmID, fireAlarm));
-                      await AndroidAlarmManager.oneShotAt(DateTime(2022,09,15,17,18), alarmID, printHello);
+
+                      //AndroidAlarmManager.oneShotAt(DateTime(2022,09,17,09,52),  Random().nextInt(pow(2, 31) as int), printHello, exact: true, wakeup: true, rescheduleOnReboot: true);
+                      //AndroidAlarmManager.oneShotAt(DateTime(2022,09, 17,09,55),  Random().nextInt(pow(2, 31) as int), printHello, exact: true, wakeup: true, rescheduleOnReboot: true);
+                      await AndroidAlarmManager.oneShotAt(DateTime(2022,09,17,12,57),  Random().nextInt(pow(2, 31) as int), printHello, exact: true, wakeup: true, rescheduleOnReboot: true);
+                      //await AndroidAlarmManager.oneShotAt(DateTime(2022,09,17,10,02),  Random().nextInt(pow(2, 31) as int), printHello, exact: true, wakeup: true, rescheduleOnReboot: true);
+                      //await AndroidAlarmManager.oneShotAt(DateTime(2022,09,16,20,39),  Random().nextInt(pow(2, 31) as int), printHello, exact: true, wakeup: true, rescheduleOnReboot: true);
+                      //await AndroidAlarmManager.oneShotAt(DateTime(2022,09,16,20,45),  Random().nextInt(pow(2, 31) as int), printHello, exact: true, wakeup: true, rescheduleOnReboot: true);
                       //print(DateTime.now());
                       //await service.showScheduledNotification(id: 1, title: 'Hola SOY JHONY', body: 'APRENDI A USAR NOTIFICACIONES', seconds: 4, /*scheduleDate: DateTime.now()*/);
                       //await service.cancelAll();
@@ -283,13 +290,29 @@ _getReceta(String codPersona) async {
   _modelReceta.setValores(recetaME);
 }
 
-// The callback for our alarm
-  static void printHello() async {
-    print('INGRESNADO A CALLBACK');
-    final instance = new LocalNotificationService();
-    instance.intialize();
+// The background
+  static SendPort? uiSendPort;
 
-    await instance.showScheduledNotification(id: 1, title: 'JR', body: 'THIS IS BODY', seconds: 4);
+// The callback for our alarm
+  static Future<void> printHello() async {
+    print('INGRESNADO A CALLBACK');
+    final instance = LocalNotificationService();
+    instance.intialize();
+    // Get the previous cached count and increment it.
+    final prefs = await SharedPreferences.getInstance();
+    final currentCount = prefs.getInt(countKey) ?? 0;
+    await prefs.setInt(countKey, currentCount + 1);
+    
+    // This will be null if we're running in the background.
+    uiSendPort ??= IsolateNameServer.lookupPortByName(isolateName);
+    uiSendPort?.send(null);
+    
+    //CANCELO TODAS LAS ALARMAS ANTERIORES PARA CREAR UAN NUEVA
+    instance.cancelAll();
+
+    //SE CANCELA EL ALARM ID
+    final now = DateTime.now();
+    await instance.showScheduledNotification(id: Random().nextInt(pow(2, 31) as int), title: '$currentCount', body: '2 capsulas', seconds: 5, scheduleDate: now);
 
     //await service.showScheduledNotification(id: 1, title: 'Hola SOY JHONY', body: 'APRENDI A USAR NOTIFICACIONES', seconds: 4);
     
