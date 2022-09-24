@@ -6,13 +6,16 @@ class Medicamento {
   int frecuencia;
   String dosis;
   bool estado;
+  String fechaCreacion;
   String nombreMedicamento;
+
 
   Medicamento({
     required this.dias,
     required this.frecuencia,
     required this.dosis,
     required this.estado,
+    required this.fechaCreacion,
     required this.nombreMedicamento,
   });
 
@@ -22,7 +25,8 @@ class Medicamento {
       frecuencia: json["frecuencia"] as int,
       dosis: json["dosis"],
       estado: json["estado"] as bool, 
-      nombreMedicamento: json["medicamento"]["nombre"],
+      fechaCreacion: json["createdAt"] as String,
+      nombreMedicamento: json["medicamento"]["nombre"]
     );
   }
 
@@ -32,6 +36,7 @@ class Medicamento {
     print("dosis: ${this.dosis}\n");
     print("estado: ${this.estado}\n");
     print("medicacion: ${this.nombreMedicamento}\n");
+    print("fecha de medicacion: ${this.fechaCreacion}");
 
   }
 

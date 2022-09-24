@@ -50,11 +50,7 @@ class _loginPageState extends State<loginPage> {
 
   @override
   void initState() {
-    //service = LocalNotificationService();
-    //service.intialize();
     super.initState();
-    // Register for events from the background isolate. These messages will
-    // always coincide with an alarm firing.
     port.listen((_) async => await _incrementCounter());
   }
 
@@ -101,15 +97,8 @@ class _loginPageState extends State<loginPage> {
                     onPressed: () async {
                       print('TOUCHEDDDD');
 
-                      //AndroidAlarmManager.oneShotAt(DateTime(2022,09,17,09,52),  Random().nextInt(pow(2, 31) as int), printHello, exact: true, wakeup: true, rescheduleOnReboot: true);
-                      //AndroidAlarmManager.oneShotAt(DateTime(2022,09, 17,09,55),  Random().nextInt(pow(2, 31) as int), printHello, exact: true, wakeup: true, rescheduleOnReboot: true);
-                      await AndroidAlarmManager.oneShotAt(DateTime(2022,09,17,12,57),  Random().nextInt(pow(2, 31) as int), printHello, exact: true, wakeup: true, rescheduleOnReboot: true);
-                      //await AndroidAlarmManager.oneShotAt(DateTime(2022,09,17,10,02),  Random().nextInt(pow(2, 31) as int), printHello, exact: true, wakeup: true, rescheduleOnReboot: true);
-                      //await AndroidAlarmManager.oneShotAt(DateTime(2022,09,16,20,39),  Random().nextInt(pow(2, 31) as int), printHello, exact: true, wakeup: true, rescheduleOnReboot: true);
-                      //await AndroidAlarmManager.oneShotAt(DateTime(2022,09,16,20,45),  Random().nextInt(pow(2, 31) as int), printHello, exact: true, wakeup: true, rescheduleOnReboot: true);
-                      //print(DateTime.now());
-                      //await service.showScheduledNotification(id: 1, title: 'Hola SOY JHONY', body: 'APRENDI A USAR NOTIFICACIONES', seconds: 4, /*scheduleDate: DateTime.now()*/);
-                      //await service.cancelAll();
+                      await AndroidAlarmManager.oneShotAt(DateTime(2022,09,23,23,50),  Random().nextInt(pow(2, 31) as int), printHello, exact: true, wakeup: true, rescheduleOnReboot: true);
+                     
                     },
                     child: const Text('Show Scheduled Notification'),
                   ),
@@ -222,21 +211,36 @@ Widget _boton(BuildContext context) {
                 user.printAttributes();
                 //PATRON SINGLETON USUARIO
                 _modelClass.setValores(user);
-                //PATRON SINGLETON MEDICAMENTOS
-                _getMedicine(user.cod_persona);
-                //PATRON SINGLETON DIETA
-                _getDietas(user.cod_persona);
-                //PATRON SINGLETON RECETA MEDICA
-                _getReceta(user.cod_persona);
-               
+
+                //PACIENTE CUENTA CON MEDICACION??
+                var reqMedicine = await _medicamen.medicamento(user.cod_persona);
+                if(reqMedicine.statusCode == 200 && reqMedicine.body.isNotEmpty){
+                  // Tiene medicacion, tendra dieta y receta medica
+                   //PATRON SINGLETON MEDICAMENTOS
+                  _getMedicine(reqMedicine);
+                  //PATRON SINGLETON DIETA
+                  _getDietas(user.cod_persona);
+                  //PATRON SINGLETON RECETA MEDICA
+                  _getReceta(user.cod_persona);
                 // ignore: use_build_context_synchronously
-                Navigator.push(context, PageTransition(
-                type: PageTransitionType.fade,
-                child: splashScreen(),
-                isIos: false,
-                duration: const Duration(milliseconds: 400)
-                ));
-            
+                  Navigator.push(context, PageTransition(
+                    type: PageTransitionType.fade,
+                    child: splashScreen(),
+                    isIos: false,
+                    duration: const Duration(milliseconds: 400)
+                   ));
+                }
+                else{
+                  // NO Cuenta con emdicaicon activa
+                  _modelMedicamto.setValoresNulos();
+                   // ignore: use_build_context_synchronously
+                  Navigator.push(context, PageTransition(
+                    type: PageTransitionType.fade,
+                    child: splashScreen(),
+                    isIos: false,
+                    duration: const Duration(milliseconds: 400)
+                   ));
+                }
               }
               else{
                 Fluttertoast.showToast(
@@ -257,9 +261,9 @@ Widget _boton(BuildContext context) {
   );
 }
 
-_getMedicine(String codPersona) async {
-   var req = await _medicamen.medicamento(codPersona);
-   var medicamentos = ConsultaMedicamento.fromReqBody(req.body);
+_getMedicine(var reqM) async {
+   //var req = await _medicamen.medicamento(codPersona);
+   var medicamentos = ConsultaMedicamento.fromReqBody(reqM.body);
    //medicamentos.printAttributes();
 
   _modelMedicamto.setValores(medicamentos);
@@ -310,16 +314,14 @@ _getReceta(String codPersona) async {
     //CANCELO TODAS LAS ALARMAS ANTERIORES PARA CREAR UAN NUEVA
     instance.cancelAll();
 
+    /*  AuthApi _authAPI = AuthApi();
+     var req = await _authAPI.login('1719624999', 'jhony123');
+     var user = UserMob.fromReqBody(req.body);*/
+
     //SE CANCELA EL ALARM ID
     final now = DateTime.now();
-    await instance.showScheduledNotification(id: Random().nextInt(pow(2, 31) as int), title: '$currentCount', body: '2 capsulas', seconds: 5, scheduleDate: now);
+    await instance.showScheduledNotification(id: Random().nextInt(pow(2, 31) as int), title: 'Notificacion', body: '2 capsulas', seconds: 5, scheduleDate: now);
 
-    //await service.showScheduledNotification(id: 1, title: 'Hola SOY JHONY', body: 'APRENDI A USAR NOTIFICACIONES', seconds: 4);
-    
+    //await service.showScheduledNotification(id: 1, title: 'Hola SOY JHONY', body: 'APRENDI A USAR NOTIFICACIONES', seconds: 4);    
   }
-
-
 }
-
-
-
