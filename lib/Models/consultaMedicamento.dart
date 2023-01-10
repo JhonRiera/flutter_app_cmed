@@ -21,7 +21,6 @@ class ConsultaMedicamento {
     var medicamentos = jsonDecode(body)['receta_medica']['receta_medicamentos'] as List;
     // ------Aniado a la lista de la clase de mendicamenntos
     List<Medicamento> listMedicam = medicamentos.map((medicamentoTag) => Medicamento.fromJson(medicamentoTag)).toList();
-
     return ConsultaMedicamento(
       cod_consulta: json["cod_consulta"],
       cod_receta: json["receta_medica"]["cod_receta"],

@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, camel_case_types
+// ignore_for_file: non_constant_identifier_names, camel_case_types, depend_on_referenced_packages, file_names
 
 import 'package:cmed_app/Models/API/baseApi.dart';
 import 'dart:convert';

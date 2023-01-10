@@ -8,11 +8,13 @@ class BaseApi{
   var medicamentos = base + "/persona/paciente/medicamentos";
   var dietas = base + "/persona/paciente/dietas";
   var recetaM = base + "/persona/paciente/recetaM";
+  var actualizaUltAcesso =  base + "/usuario/actualizarultacceso";
+  var progresoDiario = base + "/alarmas-date";
+  var actualizarAlarma = base + "/alarmas-actualizar";
+  var obtenerPersonaCedula = base + "/persona/cedula"; 
 
   Map<String,String> headers = {                           
        "Content-Type": "application/json; charset=UTF-8" 
   }; 
-
-  
 
 }

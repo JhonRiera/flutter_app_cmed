@@ -56,8 +56,8 @@ class _navBarbottomState extends State<navBarbottom> {
 
   //Creacion de pages para Bottom Nav Bar
   final homePage _listHomePage =  homePage();
-  final dietasPage _listDietas = const dietasPage();
-  final medicamentosPage _listMedicamentos = const medicamentosPage();
+  final dietasPDF _listDietas =  dietasPDF();
+  final medicamentosPage _listMedicamentos =  medicamentosPage();
   final recetaMPage _listRecetasMedicas = const recetaMPage();
   // ignore: non_constant_identifier_names
   final defaultPage _ListDefaultP = const defaultPage();

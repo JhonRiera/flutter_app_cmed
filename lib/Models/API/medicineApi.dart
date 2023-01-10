@@ -1,5 +1,5 @@
 // ignore: file_names
-// ignore_for_file: non_constant_identifier_names, camel_case_types
+// ignore_for_file: non_constant_identifier_names, camel_case_types, file_names, duplicate_ignore
 
 import 'dart:convert';
 import 'package:cmed_app/Models/API/BaseApi.dart';

@@ -29,6 +29,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.8.2"
+  barcode:
+    dependency: transitive
+    description:
+      name: barcode
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.3"
   boolean_selector:
     dependency: transitive
     description:
@@ -91,7 +98,7 @@ packages:
       name: dbus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.7.8"
+    version: "0.7.4"
   fake_async:
     dependency: transitive
     description:
@@ -105,7 +112,7 @@ packages:
       name: ffi
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "1.2.1"
   file:
     dependency: transitive
     description:
@@ -153,6 +160,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  flutter_svg:
+    dependency: "direct main"
+    description:
+      name: flutter_svg
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.6"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -198,6 +212,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.1"
+  image:
+    dependency: transitive
+    description:
+      name: image
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.3.0"
   intl:
     dependency: "direct main"
     description:
@@ -247,6 +268,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.7.0"
+  open_file:
+    dependency: "direct main"
+    description:
+      name: open_file
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.2.1"
   page_transition:
     dependency: "direct main"
     description:
@@ -261,8 +289,22 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.1"
-  path_provider:
+  path_drawing:
     dependency: transitive
+    description:
+      name: path_drawing
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
+  path_parsing:
+    dependency: transitive
+    description:
+      name: path_parsing
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
+  path_provider:
+    dependency: "direct main"
     description:
       name: path_provider
       url: "https://pub.dartlang.org"
@@ -309,7 +351,14 @@ packages:
       name: path_provider_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.2"
+    version: "2.0.7"
+  pdf:
+    dependency: "direct main"
+    description:
+      name: pdf
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.8.4"
   percent_indicator:
     dependency: "direct main"
     description:
@@ -345,6 +394,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.2.4"
+  qr:
+    dependency: transitive
+    description:
+      name: qr
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1"
   rxdart:
     dependency: "direct main"
     description:
@@ -462,6 +518,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.8.0"
+  translator:
+    dependency: "direct main"
+    description:
+      name: translator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.7"
   typed_data:
     dependency: transitive
     description:
@@ -482,7 +545,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.7.0"
+    version: "2.6.1"
   xdg_directories:
     dependency: transitive
     description:
@@ -499,4 +562,4 @@ packages:
     version: "6.1.0"
 sdks:
   dart: ">=2.17.0 <3.0.0"
-  flutter: ">=3.0.0"
+  flutter: ">=2.12.0"

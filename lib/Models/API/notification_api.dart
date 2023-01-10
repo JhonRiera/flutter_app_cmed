@@ -76,12 +76,12 @@ class LocalNotificationService {
       id,
       title,
       body,
-      /*tz.TZDateTime.from(
+      tz.TZDateTime.from(
         DateTime.now().add(Duration(seconds: seconds)),
         tz.local,
-      ),*/
+      ),
        //_scheduleWeekly(Time(19, 56), days: [DateTime.wednesday]),
-       _scheduleDaily(Time(06, 13)),
+      //_scheduleDaily(Time(00, 00)),
       details,
       androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation:
@@ -93,7 +93,7 @@ class LocalNotificationService {
 static tz.TZDateTime _scheduleDaily(Time time){   
     final ecuador = tz.getLocation('America/Guayaquil');  
     final now = tz.TZDateTime.now(ecuador);
-    var scheduleDate = tz.TZDateTime(tz.local, now.year, now.month, now.day,
+    var scheduleDate = tz.TZDateTime(tz.getLocation('America/Guayaquil'), now.year, now.month, now.day,
       time.hour, time.minute, time.second);
 
           /*return scheduleDate.isBefore(now)
@@ -106,7 +106,7 @@ static tz.TZDateTime _scheduleDaily(Time time){
       return scheduleDate;
   }
 
-  static tz.TZDateTime _scheduleWeekly(Time time, {required List<int> days}) {
+  /*static tz.TZDateTime _scheduleWeekly(Time time, {required List<int> days}) {
     tz.TZDateTime scheduleDate = _scheduleDaily(time);
 
     print(scheduleDate);
@@ -118,7 +118,7 @@ static tz.TZDateTime _scheduleDaily(Time time){
     print(scheduleDate);
 
     return scheduleDate;
-  }
+  }*/
 
 
 

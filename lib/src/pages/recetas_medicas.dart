@@ -1,8 +1,28 @@
+import 'package:cmed_app/Models/API/pdf_api.dart';
+import 'package:cmed_app/Models/API/pdf_invoice_api.dart';
+import 'package:cmed_app/Models/API/pdf_receta_api.dart';
+import 'package:cmed_app/Models/customer.dart';
+import 'package:cmed_app/Models/invoice.dart';
+import 'package:cmed_app/Models/modelClass.dart';
+import 'package:cmed_app/Models/modelClassMedica.dart';
+import 'package:cmed_app/Models/modelClassRecetaM.dart';
+import 'package:cmed_app/Models/receta.dart';
+import 'package:cmed_app/Models/supplier.dart';
+import 'package:cmed_app/src/Widgets/button_widget.dart';
+import 'package:cmed_app/src/Widgets/title_widget.dart';
+import 'package:cmed_app/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+modelClassReceta _modelReceta = GetIt.instance.get<modelClassReceta>();
+modelClass _modelClass = GetIt.instance.get<modelClass>();
+modelClassMedica _modelMedicamto = GetIt.instance.get<modelClassMedica>();
+
 
 class recetaMPage extends StatelessWidget {
   const recetaMPage({Key? key}) : super(key: key);
+  
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +44,8 @@ class recetaMPage extends StatelessWidget {
             _paciente(),
             _titulo(),
             _fechaAtencion(),
-            _recetaMedica()
+            //_recetaMedica()
+            _pdfRecetaMedica(),
           ],
         ),
       ),
@@ -47,7 +68,7 @@ class recetaMPage extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           Text(
-            "Jhony Riera",
+            _modelClass.nombre,
             style: GoogleFonts.montserrat(
               fontSize: 13.5,
             ),
@@ -97,7 +118,7 @@ class recetaMPage extends StatelessWidget {
       children: <Widget>[
         const Icon(Icons.date_range, color: Color.fromRGBO(0, 65, 196, 1), size: 30,),
         Text(
-          "22/07/2022",
+          Utils.formatDate(DateTime.parse(_modelReceta.fCreacion)),
           style: GoogleFonts.montserrat(
             fontSize: 14,
             fontWeight: FontWeight.bold
@@ -127,6 +148,114 @@ class recetaMPage extends StatelessWidget {
             
             ],
           )
+        );
+  }
+
+  Widget _pdfRecetaMedica(){
+    return Container(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const TitleWidget(
+                  icon: Icons.picture_as_pdf,
+                  text: 'Visualizar Receta Médica',
+                ),
+                const SizedBox(height: 48),
+                ButtonWidget(
+                  text: "Receta Médica PDF",
+                  onClicked: () async {
+                    //final date = DateTime.now();
+                    //final dueDate = date.add(const Duration(days: 7));
+                    final receta = Receta(
+                      supplier: Supplier(
+                        cedula: _modelClass.cedula,
+                        nombre: _modelClass.nombre,
+                        email: _modelClass.email,
+                      ),
+                      customer: const Customer(
+                        name: 'CMED móvil',
+                        address: 'Teléfono: (02) 269-2520, C.P. 170704',
+                      ),
+                      inforec: RecetaInfo(
+                        fechaCreacionR: DateTime.parse(_modelReceta.fCreacion),
+                        fechaCreacionD: DateTime.parse(_modelMedicamto.medicamentos.first.fechaCreacion),
+                        cod_persona: _modelClass.cod_persona,
+                        /*date: date,
+                        dueDate: dueDate,
+                        description: 'My description...',
+                        number: '${DateTime.now().year}-9999',*/
+                      ),
+                      medicamentos: [
+                        for(var medicamntos in _modelMedicamto.medicamentos)...[
+                          Medicamentos(
+                            cod_receta_medica: medicamntos.cod_receta_medica, 
+                            nombre_medicamento: medicamntos.nombreMedicamento,
+                            dosis: medicamntos.dosis, 
+                            frecuencia: medicamntos.frecuencia.toString(), 
+                            fecha_prescripcion: DateTime.parse( medicamntos.fechaCreacion) 
+                            )
+                        ]
+                        /*InvoiceItem(
+                          description: 'Coffee',
+                          date: DateTime.now(),
+                          quantity: 3,
+                          vat: 0.19,
+                          unitPrice: 5.99,
+                        ),
+                        InvoiceItem(
+                          description: 'Water',
+                          date: DateTime.now(),
+                          quantity: 8,
+                          vat: 0.19,
+                          unitPrice: 0.99,
+                        ),
+                        InvoiceItem(
+                          description: 'Orange',
+                          date: DateTime.now(),
+                          quantity: 3,
+                          vat: 0.19,
+                          unitPrice: 2.99,
+                        ),
+                        InvoiceItem(
+                          description: 'Apple',
+                          date: DateTime.now(),
+                          quantity: 8,
+                          vat: 0.19,
+                          unitPrice: 3.99,
+                        ),
+                        InvoiceItem(
+                          description: 'Mango',
+                          date: DateTime.now(),
+                          quantity: 1,
+                          vat: 0.19,
+                          unitPrice: 1.59,
+                        ),
+                        InvoiceItem(
+                          description: 'Blue Berries',
+                          date: DateTime.now(),
+                          quantity: 5,
+                          vat: 0.19,
+                          unitPrice: 0.99,
+                        ),
+                        InvoiceItem(
+                          description: 'Lemon',
+                          date: DateTime.now(),
+                          quantity: 4,
+                          vat: 0.19,
+                          unitPrice: 1.29,
+                        ),*/
+                      ],
+                    );
+
+                    final pdfFile = await PdfRecetaApi.generate(receta);
+
+                    PdfApi.openFile(pdfFile);
+                  },
+                ),
+              ],
+            ),
+          ),
         );
   }
 }

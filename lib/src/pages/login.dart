@@ -46,12 +46,13 @@ class loginPage extends StatefulWidget {
 class _loginPageState extends State<loginPage> {
   late final LocalNotificationService service;
   int _counter = 0;
-
+  bool passwordVisible=false;
 
   @override
   void initState() {
     super.initState();
-    port.listen((_) async => await _incrementCounter());
+    passwordVisible=true;
+    //port.listen((_) async => await _incrementCounter());
   }
 
   Future<void> _incrementCounter() async {
@@ -89,15 +90,85 @@ class _loginPageState extends State<loginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 50),
-        children: <Widget>[
-           ElevatedButton(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.white,
+      body: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Container(
+           alignment: Alignment.center,
+            width: size.width,
+            height: size.height,
+            decoration: const BoxDecoration(
+              gradient: RadialGradient(colors: [
+            Color.fromRGBO(68, 138, 255, 0.15),
+            Colors.white,
+          ], center: Alignment.topRight, radius: 0.8)),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                _welcomeText(),
+                _imagen(),
+                 SizedBox(
+                        height: size.height * 0.03,
+                      ),
+                _titulo(),
+                 SizedBox(
+                        height: size.height * 0.03,
+                      ),
+                _inputUsuario(),
+                const Divider(
+                  color: Colors.transparent,
+                  height: 25.0,
+                ),
+                _inputPassword(),
+                SizedBox(
+                        height: size.height * 0.02,
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          'Recuperar contraseña?',
+                          style: GoogleFonts.inter(
+                            fontSize: 13.0,
+                            color: const Color(0xFF6A6F7D),
+                          ),
+                          textAlign: TextAlign.right,
+                        ),
+                      ),
+                SizedBox(
+                        height: size.height * 0.03,
+                      ),
+                _boton(context),
+                          ElevatedButton(
                     onPressed: () async {
                       print('TOUCHEDDDD');
 
-                      await AndroidAlarmManager.oneShotAt(DateTime(2022,09,23,23,50),  Random().nextInt(pow(2, 31) as int), printHello, exact: true, wakeup: true, rescheduleOnReboot: true);
+                      await AndroidAlarmManager.oneShotAt(DateTime(2023,01,06,11,55),  Random().nextInt(pow(2, 31) as int), printHello, exact: true, wakeup: true, rescheduleOnReboot: true);
+                     
+                    },
+                    child: const Text('Show Scheduled Notification'),
+                  ),
+
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    /*return Scaffold(
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 50),
+        children: <Widget>[
+          ElevatedButton(
+                    onPressed: () async {
+                      print('TOUCHEDDDD');
+
+                      await AndroidAlarmManager.oneShotAt(DateTime(2022,09,24,23,57),  Random().nextInt(pow(2, 31) as int), printHello, exact: true, wakeup: true, rescheduleOnReboot: true);
                      
                     },
                     child: const Text('Show Scheduled Notification'),
@@ -122,9 +193,30 @@ class _loginPageState extends State<loginPage> {
           _boton(context)
         ],
       ),
+    );*/
+    
+  }
+Widget _welcomeText() {
+    return Center(
+      child: Text.rich(
+        TextSpan(
+          style: GoogleFonts.inter(
+            fontSize: 22.0,
+            color: const Color.fromRGBO(46, 80, 140, 1.8),
+            height: 1.59,
+          ),
+          children: const [
+            TextSpan(
+              text: '¡Bienvenido de nuevo!',
+              style: TextStyle(fontWeight: FontWeight.bold)
+            ),
+          ],
+        ),
+        textAlign: TextAlign.center,
+      ),
     );
   }
-  
+
  Widget _imagen() {
   return Container(
     margin: const EdgeInsets.fromLTRB(0, 50.0, 0, 0),
@@ -138,17 +230,31 @@ class _loginPageState extends State<loginPage> {
  }
  
 Widget _titulo() {
-  return Container(
-    margin: const EdgeInsets.fromLTRB(140.0, 20.0, 5, 5),
-    child:  RichText(text: TextSpan(
-    text: 'Paciente',
-    style: GoogleFonts.cabin(
-      fontSize: 25,
-      fontWeight: FontWeight.bold,
-      color: const Color.fromRGBO(71, 122, 213, 1)
-    ))
-  )
+  return Text.rich(
+    TextSpan(
+      style: GoogleFonts.inter(
+          fontSize: 20,
+          color: const Color.fromRGBO(71, 122, 213, 1),
+          letterSpacing: 2.000000061035156,
+        ),
+        children: const [
+          TextSpan(
+            text: 'Iniciar',
+            style: TextStyle(
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          TextSpan(
+            text: 'Sesión',
+            style: TextStyle(
+              color: Color.fromRGBO(46, 80, 140, 1.8),
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ],
+    )
   );
+
 }
 
 Widget _inputUsuario() {
@@ -169,15 +275,24 @@ Widget _inputUsuario() {
 
 Widget _inputPassword() {
   return TextField(
-      obscureText: true,
+      obscureText: passwordVisible,
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
-        hintText: 'Escriba su password',
-        labelText: 'Password',
+        hintText: 'Escriba su contraseña',
+        labelText: 'Contraseña',
         //helperText: 'Escriba solamente el password',
-        suffixIcon: const Icon(Icons.lock_open),
+        suffixIcon: IconButton(
+          icon: Icon(passwordVisible
+          ? Icons.visibility_off
+          : Icons.visibility),
+          onPressed: () {
+            setState(() {
+              passwordVisible = !passwordVisible;
+            });
+          },
+        )
       ),
       onChanged: (val) => setState(() => password = val),
     );
@@ -185,8 +300,11 @@ Widget _inputPassword() {
 
 Widget _boton(BuildContext context) {
   return Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
+        alignment: Alignment.center,
+        height: 55,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15.0),
+          gradient: const LinearGradient(
           colors: <Color>[
                 Color(0xFF0D47A1),
                 Color(0xFF1976D2),
@@ -231,7 +349,7 @@ Widget _boton(BuildContext context) {
                    ));
                 }
                 else{
-                  // NO Cuenta con emdicaicon activa
+                  // NO Cuenta con medicaicon activa
                   _modelMedicamto.setValoresNulos();
                    // ignore: use_build_context_synchronously
                   Navigator.push(context, PageTransition(
@@ -256,7 +374,7 @@ Widget _boton(BuildContext context) {
             }
            
           },
-            child: const Text('Iniciar Sesión'),
+            child: const Text('Ingresar al sistema'),
           ),
   );
 }
@@ -305,14 +423,14 @@ _getReceta(String codPersona) async {
     // Get the previous cached count and increment it.
     final prefs = await SharedPreferences.getInstance();
     final currentCount = prefs.getInt(countKey) ?? 0;
-    await prefs.setInt(countKey, currentCount + 1);
+    await prefs.setInt(countKey, currentCount + 1 );
     
     // This will be null if we're running in the background.
     uiSendPort ??= IsolateNameServer.lookupPortByName(isolateName);
     uiSendPort?.send(null);
     
     //CANCELO TODAS LAS ALARMAS ANTERIORES PARA CREAR UAN NUEVA
-    instance.cancelAll();
+    //instance.cancelAll();
 
     /*  AuthApi _authAPI = AuthApi();
      var req = await _authAPI.login('1719624999', 'jhony123');
@@ -320,7 +438,7 @@ _getReceta(String codPersona) async {
 
     //SE CANCELA EL ALARM ID
     final now = DateTime.now();
-    await instance.showScheduledNotification(id: Random().nextInt(pow(2, 31) as int), title: 'Notificacion', body: '2 capsulas', seconds: 5, scheduleDate: now);
+    await instance.showScheduledNotification(id: Random().nextInt(pow(2, 31) as int), title: currentCount.toString(), body: '2 capsulas', seconds: 5, scheduleDate: now);
 
     //await service.showScheduledNotification(id: 1, title: 'Hola SOY JHONY', body: 'APRENDI A USAR NOTIFICACIONES', seconds: 4);    
   }

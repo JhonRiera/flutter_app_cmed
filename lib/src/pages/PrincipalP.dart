@@ -22,6 +22,7 @@ class principalPage extends StatelessWidget {
           _titulo(),
           _btnLogueo(context),
           _BtnCreaCuenta(context),
+          _btnAbrirHistoriaClinica(context),
         ],
       )
     );
@@ -56,7 +57,7 @@ Widget _titulo() {
     margin: const EdgeInsets.fromLTRB(1, 30, 0, 0),
     child: ElevatedButton(
     onPressed: () {
-      print('TOCADOO');
+      //print('TOCADOO');
       Navigator.push(context, PageTransition(
         type: PageTransitionType.fade,
         child: loginPage(),
@@ -134,4 +135,44 @@ Widget _BtnCreaCuenta(BuildContext context) {
   ),
   );
 }
+
+ Widget _btnAbrirHistoriaClinica(BuildContext context) {
+  return Container(
+    margin: const EdgeInsets.fromLTRB(1, 15, 0, 0),
+    child: ElevatedButton(
+    onPressed: () {
+      Navigator.push(context, PageTransition(
+        type: PageTransitionType.fade,
+        child: createAcountPage(),
+        isIos: false,
+        duration: const Duration(milliseconds: 400)
+      ));
+    },
+    style: TextButton.styleFrom(
+      side: const BorderSide(width: 1.0, color: Colors.white),
+      textStyle: const TextStyle(color: Colors.white),
+              backgroundColor: const Color.fromRGBO(0, 65, 196, 1),
+              shape:RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+            )
+    ),
+    child: Padding(
+      padding: const EdgeInsets.fromLTRB(50, 15, 0, 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            'Abrir nueva Historia Clínica',
+            textAlign: TextAlign.left,
+            style: GoogleFonts.openSans(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: Colors.white),
+            ),
+        ],
+      ),
+    ),
+  ),
+  );
+ }
 }

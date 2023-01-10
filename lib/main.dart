@@ -33,13 +33,12 @@ Future<void> main() async => {
   if (!prefs!.containsKey(countKey)) {
     await prefs!.setInt(countKey, 0),
   },
-
     runApp(Cmed()),
     await setUp(), 
-    //runApp(Cmed()), 
     await AndroidAlarmManager.initialize(),
 };
 
+// ignore: use_key_in_widget_constructors
 class Cmed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -49,7 +48,7 @@ class Cmed extends StatelessWidget {
       routes: getRoutes(),
       onGenerateRoute: (RouteSettings seeting) {
         return MaterialPageRoute(
-          builder: ((context) => defaultPage()));
+          builder: ((context) => const defaultPage())); 
       }, 
     );
   }
