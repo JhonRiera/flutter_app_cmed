@@ -34,13 +34,13 @@ class MyPill {
         if(formattedHour <= data && formattedMinute <= minuteStartMedication){
           //La siguiente toma esta en mismo dia, mes y anio 
           band = true;
-          fproximaToma = DateTime(2022,formattedMounth,formattedDay, data, minuteStartMedication);
+          fproximaToma = DateTime(2023,formattedMounth,formattedDay, data, minuteStartMedication);
           break;
         }
       } 
 
       if(band!= true){
-         fproximaToma = DateTime(2022,formattedMounth,formattedDay +1 , tomasCadaDiaHora.first, formattedMinute);
+         fproximaToma = DateTime(2023,formattedMounth,formattedDay +1 , tomasCadaDiaHora.first, formattedMinute);
       }
       band = false;
       return DateFormat.MMMMEEEEd().format(fproximaToma);
@@ -80,13 +80,13 @@ class MyPill {
         if(formattedHour <= data && formattedMinute <= minuteStartMedication){
           //La siguiente toma esta en mismo dia, mes y anio 
           band = true;
-          fproximaToma = DateTime(2022,formattedMounth,formattedDay, data, minuteStartMedication);
+          fproximaToma = DateTime(2023,formattedMounth,formattedDay, data, minuteStartMedication);
           break;
         }
       } 
 
       if(band!= true){
-         fproximaToma = DateTime(2022,formattedMounth,formattedDay +1 , tomasCadaDiaHora.first, minuteStartMedication);
+         fproximaToma = DateTime(2023,formattedMounth,formattedDay +1 , tomasCadaDiaHora.first, minuteStartMedication);
       }
       band = false;
       return DateFormat.Hm().format(fproximaToma);

@@ -144,15 +144,16 @@ class _loginPageState extends State<loginPage> {
                         height: size.height * 0.03,
                       ),
                 _boton(context),
-                          ElevatedButton(
+                         /* ElevatedButton(
                     onPressed: () async {
                       print('TOUCHEDDDD');
 
+                      //print(' /// *** ${printHello().then((value) => print(" HY $value"))}');
                       await AndroidAlarmManager.oneShotAt(DateTime(2023,01,06,11,55),  Random().nextInt(pow(2, 31) as int), printHello, exact: true, wakeup: true, rescheduleOnReboot: true);
                      
                     },
                     child: const Text('Show Scheduled Notification'),
-                  ),
+                  ),*/
 
               ],
             ),
@@ -221,7 +222,8 @@ Widget _welcomeText() {
   return Container(
     margin: const EdgeInsets.fromLTRB(0, 50.0, 0, 0),
     child: const Image(
-    image: AssetImage('assets/heart.png'),
+    image: AssetImage('assets/logoCMED.png'),
+    //image: AssetImage('assets/heart.png'),
     color:Color.fromRGBO(71, 122, 213, 1),
     width: 200.0,
     height: 150.0,
@@ -416,14 +418,14 @@ _getReceta(String codPersona) async {
   static SendPort? uiSendPort;
 
 // The callback for our alarm
-  static Future<void> printHello() async {
+   static Future<int> printHello() async {
     print('INGRESNADO A CALLBACK');
     final instance = LocalNotificationService();
     instance.intialize();
     // Get the previous cached count and increment it.
     final prefs = await SharedPreferences.getInstance();
     final currentCount = prefs.getInt(countKey) ?? 0;
-    await prefs.setInt(countKey, currentCount + 1 );
+    await prefs.setInt(countKey, currentCount * 0 );
     
     // This will be null if we're running in the background.
     uiSendPort ??= IsolateNameServer.lookupPortByName(isolateName);
@@ -432,14 +434,16 @@ _getReceta(String codPersona) async {
     //CANCELO TODAS LAS ALARMAS ANTERIORES PARA CREAR UAN NUEVA
     //instance.cancelAll();
 
-    /*  AuthApi _authAPI = AuthApi();
+    AuthApi _authAPI = AuthApi();
      var req = await _authAPI.login('1719624999', 'jhony123');
-     var user = UserMob.fromReqBody(req.body);*/
+     var user = UserMob.fromReqBody(req.body);
 
     //SE CANCELA EL ALARM ID
     final now = DateTime.now();
-    await instance.showScheduledNotification(id: Random().nextInt(pow(2, 31) as int), title: currentCount.toString(), body: '2 capsulas', seconds: 5, scheduleDate: now);
+    //await instance.showScheduledNotification(id: currentCount, title: currentCount.toString(), body: '2 capsulas', seconds: 5, scheduleDate: DateTime.parse('2022-03-03'));
+    await instance.showScheduledNotification(id: currentCount, title: user.nombre, body: '2 capsulas', seconds: 5, scheduleDate: now);
 
+    return currentCount;
     //await service.showScheduledNotification(id: 1, title: 'Hola SOY JHONY', body: 'APRENDI A USAR NOTIFICACIONES', seconds: 4);    
   }
 }

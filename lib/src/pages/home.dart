@@ -1,9 +1,11 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers, camel_case_types, unnecessary_const, avoid_unnecessary_containers, unused_local_variable, sized_box_for_whitespace
+// ignore_for_file: no_leading_underscores_for_local_identifiers, camel_case_types, unnecessary_const, avoid_unnecessary_containers, unused_local_variable, sized_box_for_whitespace, unrelated_type_equality_checks
 
 import 'dart:convert';
 import 'dart:isolate';
+import 'dart:math';
 import 'dart:ui';
 
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:cmed_app/Models/API/dailyProgressApi.dart';
 import 'package:cmed_app/Models/API/medicineApi.dart';
 import 'package:cmed_app/Models/API/ultimoAceeso.dart';
@@ -116,21 +118,14 @@ class _homePageState extends State<homePage> {
   final ultimoAccesoApi _ultimoacc = ultimoAccesoApi();
 
 @override
-  void initState() {
+  void initState(){
     // ignore: todo
     // TODO: implement initState
     super.initState();
     futureProgreso = fetchData('','');
     //AL INICIAR SESION ACTUALIZO FECHA DE ULTIMO ACCESO
     actualizarFechaUltimoAcc();
-
-      if(getCacheValue == 0){
-        print('sin notificaciones $getCacheValue()');
-      }
-      else{
-        print("con notificaciones $getCacheValue()");
-      } 
-
+     //_CrearNotificaciones();
      _pageController.addListener(() {
       if (_pageController.page != null) {
         _page = _pageController.page!;
@@ -148,9 +143,9 @@ void _handleCartChanged(Medicamento medicina, bool touch) {
     });
   }
 
-void _showCard(String cod_med){
+void _showCard(String codMed){
   setState(() {
-    futureProgreso = fetchData(cod_med,'2023-01-09');
+    futureProgreso = fetchData(codMed,'2023-01-17');
   });
 }
 
@@ -261,14 +256,13 @@ void _showCard(String cod_med){
      // Get the previous cached count and increment it.
     final prefs = await SharedPreferences.getInstance();
     final currentCount = prefs.getInt(countKey) ?? 0;
-    await prefs.setInt(countKey, currentCount);
+    await prefs.setInt(countKey, currentCount * 0);
 
     // This will be null if we're running in the background.
     uiSendPort ??= IsolateNameServer.lookupPortByName(isolateName);
     uiSendPort?.send(null);
 
     return currentCount;
-
  }
 
   Widget _saludoTop() {
@@ -310,7 +304,7 @@ void _showCard(String cod_med){
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                         Text(
-                          "Bienvenido ${_modelClass.nombre}",
+                          "Bienvenid@ ${_modelClass.nombre}",
                           style: GoogleFonts.montserrat(
                               fontSize: 18,
                             color: Colors.white,
@@ -439,6 +433,7 @@ void _showCard(String cod_med){
                 SizedBox(
                   width: 160.0,
                   child: Text(
+                    //"Próxima toma: Wednesday, January 11",
                     "Próxima toma: ${pill.proximaToma(0)}",
                     style: GoogleFonts.roboto(
                     fontSize: 13.5,
@@ -453,6 +448,7 @@ void _showCard(String cod_med){
                 SizedBox(
                   width: 160.0,
                   child: Text(
+                     //"Hora: 15:20 ",
                     "Hora: ${pill.proximaTomaHora(0)}",
                     style: GoogleFonts.roboto(
                     fontSize: 13.5,
@@ -535,6 +531,41 @@ void _showCard(String cod_med){
     var reqUA = await _ultimoacc.usuarioUltimoAcc(_modelClass.cod_persona, dateActual.toString());
   }
   
+  // ignore: non_constant_identifier_names
+  Future<void> _CrearNotificaciones() async {
+    int notificaciones = await getCacheValue();
+    int anio = 2012, mes = 1, dia = 1, diaMaximo = 0, index;  
+
+    if(notificaciones == 0){
+      List<int> myList = [];
+      for(var medic in _modelMedicamto.medicamentos){
+        myList.add(medic.dias);
+      }
+      diaMaximo =  myList.reduce(max);//Obtengo el dia maximo para creacion de oneShot
+      index = myList.indexOf(diaMaximo);
+      DateTime fechaMedicamtoLargo = DateTime.parse(_modelMedicamto.medicamentos[index].fechaCreacion);
+        anio = int.parse(DateFormat.y().format(fechaMedicamtoLargo));
+        mes = int.parse(DateFormat.M().format(fechaMedicamtoLargo));
+        dia = int.parse(DateFormat.d().format(fechaMedicamtoLargo));
+
+      for(var i = 0 ; i< diaMaximo; i ++){
+        if( i == 0 ){
+            //Crear Par ese dia las notificaciones Y oneShot para las 11.59
+        }
+        else{
+          await AndroidAlarmManager.oneShotAt(DateTime(anio,mes,dia,11,59).add(Duration(days: i)),  Random().nextInt(pow(2, 31) as int), createNotification, exact: true, wakeup: true, rescheduleOnReboot: true);
+        }
+      }
+    }
+    else{//Usuario que ya tiene notificaciones locales creadas
+      
+    }
+  }
+  
+
+  static Future<void> createNotification() async{
+
+  }
 }
 
 class ItemBuilder extends StatelessWidget {
@@ -635,11 +666,20 @@ class ItemBuilder extends StatelessWidget {
   }
 
   Color color(){
-    if(_items[index].estadoBoton != false){
+    if(_items[index].estadoBoton != false ){
       return  const Color.fromRGBO(74, 223, 221, 1);
     }
     else{
-      return Colors.redAccent;
+      if(_items[index].estadoBoton == false && _items[index].color == Colors.green){
+        return  Colors.green;
+      }
+      else{
+        if(_items[index].estadoBoton == false && _items[index].color == Colors.blueAccent){
+          return Colors.black12;
+        }
+        return Colors.redAccent;
+      }
+      
     }
   }
 }
@@ -741,10 +781,14 @@ fullCards(String title, String subtitleOne, List<Alarma> alm){
         PillCard(color: Colors.blueAccent, title: title, subtitleOne: subtitleOne, codAlarma: dat.cod_alarma, hora: DateTime.parse(dat.tiempo_recordatorio), estadoBoton: false),
       ]else...[
         //DESPUES
-        if(horaActual.isAfter(DateTime.parse(dat.tiempo_recordatorio).toLocal().add(Duration(hours: 5))) && horaActual.compareTo(DateTime.parse(dat.tiempo_recordatorio).toLocal().add(Duration(hours: 5)).add(const Duration(hours: 2))) > 0)...[
+        if(horaActual.isAfter(DateTime.parse(dat.tiempo_recordatorio).toLocal().add(Duration(hours: 5))) && horaActual.compareTo(DateTime.parse(dat.tiempo_recordatorio).toLocal().add(Duration(hours: 5)).add(const Duration(hours: 2))) > 0 && dat.estado == false)...[
           PillCard(color: Colors.red, title: title, subtitleOne: subtitleOne, codAlarma: dat.cod_alarma, hora: DateTime.parse(dat.tiempo_recordatorio), estadoBoton: false),
         ]else...[
-          PillCard(color: Colors.blueAccent, title: title, subtitleOne: subtitleOne, codAlarma: dat.cod_alarma, hora: DateTime.parse(dat.tiempo_recordatorio), estadoBoton: true),
+          if(dat.estado == true)...[
+            PillCard(color: Colors.green, title: title, subtitleOne: subtitleOne, codAlarma: dat.cod_alarma, hora: DateTime.parse(dat.tiempo_recordatorio), estadoBoton: false),
+          ]else...[
+            PillCard(color: Colors.blueAccent, title: title, subtitleOne: subtitleOne, codAlarma: dat.cod_alarma, hora: DateTime.parse(dat.tiempo_recordatorio), estadoBoton: true),
+          ]
         ]
       ]
       /*if(horaActual.compareTo(DateTime.parse(dat.tiempo_recordatorio).add(Duration(hours: 2))) < 0 )...[

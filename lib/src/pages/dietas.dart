@@ -60,8 +60,8 @@ class _dietasPDFState extends State<dietasPDF> {
                         email: _modelClass.email,
                       ),
                       customer: const Customer(
-                        name: 'Apple Inc.',
-                        address: 'Apple Street, Cupertino, CA 95014',
+                        name: 'CMED móvil',
+                        address: '(02) 269-2520, C.P. 170704',
                       ),
                       info: InvoiceInfo(
                         fechaCreacionR: DateTime.parse(_modelDieta.feCreacion),

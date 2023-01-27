@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cmed_app/Models/service_locator.dart';
 import 'package:cmed_app/src/pages/default_page.dart';
 import 'package:cmed_app/src/routes/routes.dart';
@@ -19,8 +21,20 @@ final ReceivePort port = ReceivePort();
 /// Global [SharedPreferences] object.
 SharedPreferences? prefs;
 
+ class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+     return super.createHttpClient(context)
+       ..findProxy = (uri) {
+         return "PROXY 192.168.100.20:8888;";
+       }
+       ..badCertificateCallback =
+         (X509Certificate cert, String host, int port) => true;
+   }
+}
 
-Future<void> main() async => {  
+Future<void> main() async => { 
+  HttpOverrides.global = new MyHttpOverrides(), 
   WidgetsFlutterBinding.ensureInitialized(), 
 
   // Register the UI isolate's SendPort to allow for communication from the

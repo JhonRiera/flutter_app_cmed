@@ -7,7 +7,7 @@
         <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
     <!--END OF THIS  ALARM MANAGER-->
    <application
-        android:label="cmed_app"
+        android:label="CMED móvil"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

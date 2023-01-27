@@ -81,7 +81,7 @@ class LocalNotificationService {
         tz.local,
       ),
        //_scheduleWeekly(Time(19, 56), days: [DateTime.wednesday]),
-      //_scheduleDaily(Time(00, 00)),
+      //_scheduleDaily(Time(scheduleDate.hour, scheduleDate.minute)),
       details,
       androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation:
