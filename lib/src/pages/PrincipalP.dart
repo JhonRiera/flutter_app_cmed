@@ -1,5 +1,6 @@
 import 'package:cmed_app/src/pages/create_account.dart';
 import 'package:cmed_app/src/pages/login.dart';
+import 'package:cmed_app/src/pages/nueva_HCE.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
@@ -143,7 +144,7 @@ Widget _BtnCreaCuenta(BuildContext context) {
     onPressed: () {
       Navigator.push(context, PageTransition(
         type: PageTransitionType.fade,
-        child: createAcountPage(),
+        child: RegisterPage(),
         isIos: false,
         duration: const Duration(milliseconds: 400)
       ));

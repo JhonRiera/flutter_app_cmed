@@ -26,7 +26,7 @@ SharedPreferences? prefs;
   HttpClient createHttpClient(SecurityContext? context) {
      return super.createHttpClient(context)
        ..findProxy = (uri) {
-         return "PROXY 192.168.100.20:8888;";
+         return "PROXY 192.168.68.115:8888;";
        }
        ..badCertificateCallback =
          (X509Certificate cert, String host, int port) => true;
@@ -34,7 +34,8 @@ SharedPreferences? prefs;
 }
 
 Future<void> main() async => { 
-  HttpOverrides.global = new MyHttpOverrides(), 
+  //ACTIVAR PROXY Y TAMBN CAMBIAR IP DEL PROXY ARRIBA
+  //HttpOverrides.global = new MyHttpOverrides(), 
   WidgetsFlutterBinding.ensureInitialized(), 
 
   // Register the UI isolate's SendPort to allow for communication from the

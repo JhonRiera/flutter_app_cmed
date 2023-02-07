@@ -261,6 +261,7 @@ Widget _titulo() {
 
 Widget _inputUsuario() {
   return TextField(
+      key: const Key("inputUsuario"),
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
         border: OutlineInputBorder(
@@ -277,6 +278,7 @@ Widget _inputUsuario() {
 
 Widget _inputPassword() {
   return TextField(
+    key: const Key("inputPassword"),
       obscureText: passwordVisible,
       decoration: InputDecoration(
         border: OutlineInputBorder(

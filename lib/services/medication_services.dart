@@ -31,15 +31,18 @@ class MyPill {
 
   String proximaToma(int valor){
       for(var data in tomasCadaDiaHora){
-        if(formattedHour <= data && formattedMinute <= minuteStartMedication){
+        if(formattedHour <= data /*&& formattedMinute <= minuteStartMedication*/){
           //La siguiente toma esta en mismo dia, mes y anio 
           band = true;
+          print('TRUEE');
           fproximaToma = DateTime(2023,formattedMounth,formattedDay, data, minuteStartMedication);
           break;
         }
       } 
 
       if(band!= true){
+                  print('FALSEE');
+
          fproximaToma = DateTime(2023,formattedMounth,formattedDay +1 , tomasCadaDiaHora.first, formattedMinute);
       }
       band = false;
@@ -77,7 +80,7 @@ class MyPill {
 
   String proximaTomaHora(int valor){
       for(var data in tomasCadaDiaHora){
-        if(formattedHour <= data && formattedMinute <= minuteStartMedication){
+        if(formattedHour <= data /*&& formattedMinute <= minuteStartMedication*/){
           //La siguiente toma esta en mismo dia, mes y anio 
           band = true;
           fproximaToma = DateTime(2023,formattedMounth,formattedDay, data, minuteStartMedication);

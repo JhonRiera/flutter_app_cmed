@@ -3,6 +3,7 @@ import 'package:cmed_app/Models/API/pdf_invoice_api.dart';
 import 'package:cmed_app/Models/customer.dart';
 import 'package:cmed_app/Models/invoice.dart';
 import 'package:cmed_app/Models/modelClassDietas.dart';
+import 'package:cmed_app/Models/modelClassMedica.dart';
 import 'package:cmed_app/Models/modelClassRecetaM.dart';
 import 'package:cmed_app/Models/supplier.dart';
 import 'package:cmed_app/src/Widgets/button_widget.dart';
@@ -15,6 +16,7 @@ import 'package:intl/intl.dart';
 import '../../Models/modelClass.dart';
 
 modelClass _modelClass = GetIt.instance.get<modelClass>();
+modelClassMedica _modelMedicamto = GetIt.instance.get<modelClassMedica>();
 modelClassDieta _modelDieta = GetIt.instance.get<modelClassDieta>();
 modelClassReceta _modelReceta = GetIt.instance.get<modelClassReceta>();
 
@@ -42,7 +44,9 @@ class _dietasPDFState extends State<dietasPDF> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                //_dietas(),
+
+                if(_modelMedicamto.cod_consulta != "empty")...[
+                   //_dietas(),
                 const TitleWidget(
                   icon: Icons.picture_as_pdf,
                   text: 'Visualizar Dieta',
@@ -130,6 +134,14 @@ class _dietasPDFState extends State<dietasPDF> {
                     PdfApi.openFile(pdfFile);
                   },
                 ),
+                ]
+                else ...[
+                  const Divider(
+                    color: Colors.transparent,
+                    height: 95,
+                  ),
+                  _sinMedicacion()
+                ]
               ],
             ),
           ),
@@ -189,6 +201,16 @@ Widget _dietas() {
       ),
     ),
   );
+  }
+    //WIDGET DEVUELVE CONTENEDOR SIN MEDICACION
+  Widget _sinMedicacion() {
+    return Container(
+      alignment: Alignment.center,
+      child: Image.asset(
+            "assets/Alert-pill.png",
+            fit: BoxFit.cover,
+      ),
+    );
   }
 
 /* ENDF OF PDF*/

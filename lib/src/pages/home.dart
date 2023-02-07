@@ -8,6 +8,7 @@ import 'dart:ui';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:cmed_app/Models/API/dailyProgressApi.dart';
 import 'package:cmed_app/Models/API/medicineApi.dart';
+import 'package:cmed_app/Models/API/notificacionPulsada.dart';
 import 'package:cmed_app/Models/API/ultimoAceeso.dart';
 import 'package:cmed_app/Models/alarmUser.dart';
 import 'package:cmed_app/Models/medicineUser.dart';
@@ -17,6 +18,7 @@ import 'package:cmed_app/services/medication_services.dart';
 import 'package:cmed_app/services/progress_pill_card.dart';
 import 'package:cmed_app/src/pages/default_page.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -122,7 +124,7 @@ class _homePageState extends State<homePage> {
     // ignore: todo
     // TODO: implement initState
     super.initState();
-    futureProgreso = fetchData('','');
+    futureProgreso = fetchData('0','12-12-12');
     //AL INICIAR SESION ACTUALIZO FECHA DE ULTIMO ACCESO
     actualizarFechaUltimoAcc();
      //_CrearNotificaciones();
@@ -145,7 +147,7 @@ void _handleCartChanged(Medicamento medicina, bool touch) {
 
 void _showCard(String codMed){
   setState(() {
-    futureProgreso = fetchData(codMed,'2023-01-17');
+    futureProgreso = fetchData(codMed,'2023-02-07');
   });
 }
 
@@ -297,8 +299,6 @@ void _showCard(String codMed){
                     ),
                     const SizedBox(width: 15.0),
                   ],
-                  
-                  
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -317,7 +317,8 @@ void _showCard(String codMed){
                             color: Colors.white,
                           ),
                         ),
-                        Row(
+                        if(_modelMedicamto.cod_consulta != "empty")...[
+                            Row(
                           children: <Widget>[
                             const Icon(
                               Icons.alarm,
@@ -333,9 +334,10 @@ void _showCard(String codMed){
                               fontSize: 15,
                             color: Colors.white,
                           ),
-                        ),
+                          ),
                           ],
-                        )
+                         )
+                        ] 
                     ],
                   ),
                 ],
@@ -530,6 +532,8 @@ void _showCard(String codMed){
     final dateActual = DateTime.now();
     var reqUA = await _ultimoacc.usuarioUltimoAcc(_modelClass.cod_persona, dateActual.toString());
   }
+
+
   
   // ignore: non_constant_identifier_names
   Future<void> _CrearNotificaciones() async {
@@ -578,7 +582,7 @@ class ItemBuilder extends StatelessWidget {
 
   final List<PillCard> _items;
   final int index;
-
+  
   @override
   Widget build(BuildContext context) {
     bool _buttonEnabled = _items[index].estadoBoton; // Variable de estado para controlar el estado del botón
@@ -650,6 +654,14 @@ class ItemBuilder extends StatelessWidget {
               backgroundColor: color(),
               enableFeedback: false,
               onPressed: _buttonEnabled ? () {
+                //enviar que tarjeta fue pulsada
+                actualizaEstadoAl(_items[index].codAlarma);
+                 Fluttertoast.showToast(
+                  msg: "Confirmado",  // message
+                  toastLength: Toast.LENGTH_SHORT, // length
+                  gravity: ToastGravity.CENTER,    // location
+                  timeInSecForIosWeb: 5               // duration
+                );
                 print(_items[index].codAlarma);
               }: null,
               child: const Icon(
@@ -664,6 +676,14 @@ class ItemBuilder extends StatelessWidget {
       )
     );
   }
+
+    //METODO ACTUALIZAR ESTADO DE ALARMA PULSADA
+  Future<void> actualizaEstadoAl(String codAl) async {
+      final actualizarAlarmaNoti _actult = actualizarAlarmaNoti();
+
+    var reqAA = await _actult.actualizarAl(codAl);
+  }
+
 
   Color color(){
     if(_items[index].estadoBoton != false ){

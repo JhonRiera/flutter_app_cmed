@@ -41,11 +41,20 @@ class recetaMPage extends StatelessWidget {
         ),
         body: ListView(
           children: [
-            _paciente(),
-            _titulo(),
-            _fechaAtencion(),
-            //_recetaMedica()
-            _pdfRecetaMedica(),
+            if(_modelMedicamto.cod_consulta != "empty")...[
+                _paciente(),
+                _titulo(),
+                _fechaAtencion(),
+                //_recetaMedica()
+               _pdfRecetaMedica(),
+            ]
+            else...[
+              const Divider(
+                    color: Colors.transparent,
+                    height: 95,
+                  ),
+              _sinMedicacion()
+            ]
           ],
         ),
       ),
@@ -258,4 +267,16 @@ class recetaMPage extends StatelessWidget {
           ),
         );
   }
+
+      //WIDGET DEVUELVE CONTENEDOR SIN MEDICACION
+  Widget _sinMedicacion() {
+    return Container(
+      alignment: Alignment.center,
+      child: Image.asset(
+            "assets/Alert-pill.png",
+            fit: BoxFit.cover,
+      ),
+    );
+  }
+
 }
