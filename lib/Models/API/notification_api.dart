@@ -69,7 +69,7 @@ class LocalNotificationService {
       {required int id,
       required String title,
       required String body,
-      required int seconds,
+      required int minutes,
       required DateTime scheduleDate}) async {
     final details = await _notificationDetails();
     await _localNotificationService.zonedSchedule(
@@ -77,7 +77,7 @@ class LocalNotificationService {
       title,
       body,
       tz.TZDateTime.from(
-        DateTime.now().add(Duration(seconds: seconds)),
+        DateTime.now().add(Duration(minutes: minutes)),
         tz.local,
       ),
        //_scheduleWeekly(Time(19, 56), days: [DateTime.wednesday]),

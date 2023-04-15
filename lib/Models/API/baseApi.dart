@@ -2,7 +2,7 @@
 
 class BaseApi{
 
-  static String base = "http://192.168.68.115:4000";
+  static String base = "http://192.168.100.20:4000";
   
   var mobileUsers = base + "/personas/usuarios/mobile";
   var medicamentos = base + "/persona/paciente/medicamentos";

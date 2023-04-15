@@ -53,6 +53,7 @@ class _loginPageState extends State<loginPage> {
     super.initState();
     passwordVisible=true;
     //port.listen((_) async => await _incrementCounter());
+    printHello();
   }
 
   Future<void> _incrementCounter() async {
@@ -144,12 +145,12 @@ class _loginPageState extends State<loginPage> {
                         height: size.height * 0.03,
                       ),
                 _boton(context),
-                         /* ElevatedButton(
+                      /*ElevatedButton(
                     onPressed: () async {
                       print('TOUCHEDDDD');
 
                       //print(' /// *** ${printHello().then((value) => print(" HY $value"))}');
-                      await AndroidAlarmManager.oneShotAt(DateTime(2023,01,06,11,55),  Random().nextInt(pow(2, 31) as int), printHello, exact: true, wakeup: true, rescheduleOnReboot: true);
+                      await AndroidAlarmManager.oneShotAt(DateTime(2023,02,07,10,55),  Random().nextInt(pow(2, 31) as int), printHello, exact: true, wakeup: true, rescheduleOnReboot: true);
                      
                     },
                     child: const Text('Show Scheduled Notification'),
@@ -322,7 +323,7 @@ Widget _boton(BuildContext context) {
             primary: Colors.white,
             textStyle: const TextStyle(fontSize: 19),
           ),
-          onPressed: () async {
+          onPressed: () async {   
             try{
               //REQ de login
               var req = await _authAPI.login(cedula, password);
@@ -436,14 +437,14 @@ _getReceta(String codPersona) async {
     //CANCELO TODAS LAS ALARMAS ANTERIORES PARA CREAR UAN NUEVA
     //instance.cancelAll();
 
-    AuthApi _authAPI = AuthApi();
+   /* AuthApi _authAPI = AuthApi();
      var req = await _authAPI.login('1719624999', 'jhony123');
-     var user = UserMob.fromReqBody(req.body);
+     var user = UserMob.fromReqBody(req.body);*/
 
     //SE CANCELA EL ALARM ID
     final now = DateTime.now();
     //await instance.showScheduledNotification(id: currentCount, title: currentCount.toString(), body: '2 capsulas', seconds: 5, scheduleDate: DateTime.parse('2022-03-03'));
-    await instance.showScheduledNotification(id: currentCount, title: user.nombre, body: '2 capsulas', seconds: 5, scheduleDate: now);
+    await instance.showScheduledNotification(id: currentCount, title: "Sumatriptán", body: '1 capsula', minutes: 15, scheduleDate: now);
 
     return currentCount;
     //await service.showScheduledNotification(id: 1, title: 'Hola SOY JHONY', body: 'APRENDI A USAR NOTIFICACIONES', seconds: 4);    
